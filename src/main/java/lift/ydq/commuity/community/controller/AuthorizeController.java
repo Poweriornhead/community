@@ -4,6 +4,7 @@ import lift.ydq.commuity.community.dto.AccesstokenDTO;
 import lift.ydq.commuity.community.dto.GithubUser;
 import lift.ydq.commuity.community.provider.GithubProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,14 +19,21 @@ public class AuthorizeController {
     @Autowired
     private GithubProvider githubProvider;
 
+    @Value("${github.client.id}")
+    private String clientId;
+    @Value("${github.client.secret}")
+    private String clientSecret;
+    @Value("${github.redirect.uri}")
+    private String redirectUri;
+
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code")  String code,
                        @RequestParam(name = "state") String state){
         AccesstokenDTO accessTokenDto =new AccesstokenDTO();
-        accessTokenDto.setClient_id("ea93ff98e309ed3a77b6");
-        accessTokenDto.setClient_secret("08bf766871e0ae32f3aa4355e342a34dc7140324");
+        accessTokenDto.setClient_id(clientId);
+        accessTokenDto.setClient_secret(clientSecret);
         accessTokenDto.setCode(code);
-        accessTokenDto.setRedirect_uri("http://localhost:8080/callback");
+        accessTokenDto.setRedirect_uri(redirectUri);
         accessTokenDto.setState(state);
         String accessToken =githubProvider.getAccessToken(accessTokenDto);
         GithubUser user = githubProvider.gitUser(accessToken);
