@@ -1,7 +1,6 @@
 package lift.ydq.commuity.community.controller;
 
 import lift.ydq.commuity.community.dto.QuestionDTO;
-import lift.ydq.commuity.community.model.Question;
 import lift.ydq.commuity.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
