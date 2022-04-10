@@ -2,6 +2,8 @@ package lift.ydq.commuity.community.service;
 
 import lift.ydq.commuity.community.dto.PaginationDTO;
 import lift.ydq.commuity.community.dto.QuestionDTO;
+import lift.ydq.commuity.community.exception.CustomizeErrorCode;
+import lift.ydq.commuity.community.exception.CustomizeException;
 import lift.ydq.commuity.community.mapper.QuestionMapper;
 import lift.ydq.commuity.community.mapper.UserMapper;
 import lift.ydq.commuity.community.model.Question;
@@ -89,6 +91,9 @@ public class QuestionService {
 
     public QuestionDTO getById(Integer id) {
         Question question = questionMapper.selectByPrimaryKey(id);
+        if (question == null){
+            throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+        }
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question,questionDTO);
         User user =userMapper.selectByPrimaryKey(question.getCreator());
@@ -115,7 +120,10 @@ public class QuestionService {
             QuestionExample questionExample = new QuestionExample();
             questionExample.createCriteria()
                             .andIdEqualTo(question.getId());
-            questionMapper.updateByExampleSelective(updateQuestion,questionExample);
+            int updated = questionMapper.updateByExampleSelective(updateQuestion,questionExample);
+            if (updated != 1){
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
         }
     }
 }
