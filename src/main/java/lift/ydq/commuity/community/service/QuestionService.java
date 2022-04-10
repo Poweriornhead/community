@@ -4,6 +4,7 @@ import lift.ydq.commuity.community.dto.PaginationDTO;
 import lift.ydq.commuity.community.dto.QuestionDTO;
 import lift.ydq.commuity.community.exception.CustomizeErrorCode;
 import lift.ydq.commuity.community.exception.CustomizeException;
+import lift.ydq.commuity.community.mapper.QuestionExtMapper;
 import lift.ydq.commuity.community.mapper.QuestionMapper;
 import lift.ydq.commuity.community.mapper.UserMapper;
 import lift.ydq.commuity.community.model.Question;
@@ -26,6 +27,9 @@ public class QuestionService {
 
     @Autowired
     private QuestionMapper questionMapper;
+
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -125,5 +129,12 @@ public class QuestionService {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         }
+    }
+
+    public void incView(Integer id) {
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
     }
 }
