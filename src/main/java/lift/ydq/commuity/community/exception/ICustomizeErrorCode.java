@@ -6,4 +6,5 @@ package lift.ydq.commuity.community.exception;
  */
 public interface ICustomizeErrorCode {
     String getMessage();
+    Integer getCode();
 }
