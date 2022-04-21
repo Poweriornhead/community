@@ -3,6 +3,7 @@ package lift.ydq.commuity.community.controller;
 import lift.ydq.commuity.community.dto.CommentCreateDTO;
 import lift.ydq.commuity.community.dto.CommentDTO;
 import lift.ydq.commuity.community.dto.ResultDTO;
+import lift.ydq.commuity.community.enums.CommentTypeEnum;
 import lift.ydq.commuity.community.exception.CustomizeErrorCode;
 import lift.ydq.commuity.community.model.Comment;
 import lift.ydq.commuity.community.model.User;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author YDQ
@@ -47,4 +49,12 @@ public class CommentController {
         commentService.insert(comment);
         return ResultDTO.okOf();
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/comment/{id}", method = RequestMethod.GET)
+    public ResultDTO<List<CommentDTO>> comments(@PathVariable(name = "id") Long id){
+        List<CommentDTO> commentDTOS = commentService.listByTagetId(id, CommentTypeEnum.COMMENT);
+        return ResultDTO.okOf(commentDTOS);
+    }
+
 }

@@ -9,6 +9,15 @@ body{
     float: right;
     margin-bottom: 15px;
 }
+.publish-tag-tab{
+    display: none;
+    margin-top: 10px;
+    padding-top: 10px;
+}
+.publish-tag-tab .label-info{
+    margin: 5px 5px;
+    white-space: normal;
+}
 .media-object{
     width: 30px;
     height: 30px;
@@ -45,6 +54,16 @@ body{
     float: right;
     margin-bottom: 10px;
 }
+.sub-comment{
+    border-radius: 15px;
+    margin-top: 10px;
+    border: 1px solid #eee;
+    padding-top: 15px;
+    margin-bottom: 15px ;
+}
+.sub-comment .btn{
+    margin: 10px 0;
+}
 .maun{
     color: #999;
     margin-top: 5px;
@@ -54,6 +73,20 @@ body{
     font-size: 15px;
     cursor: pointer;
 }
+
+.maun .active{
+    color: #2aabd2;
+}
 .maun .icon:hover{
     color: #2aabd2;
+}
+.question-tag{
+    margin-right: 5px;
+}
+.question-relatd{
+    line-height: 20px;
+    font-size: 12px;
+    margin-left: 0;
+    list-style: none;
+    padding-left: 0;
 }

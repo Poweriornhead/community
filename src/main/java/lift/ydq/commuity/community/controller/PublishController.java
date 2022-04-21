@@ -1,10 +1,12 @@
 package lift.ydq.commuity.community.controller;
 
+import lift.ydq.commuity.community.cacha.TagCacha;
 import lift.ydq.commuity.community.mapper.QuestionMapper;
 import lift.ydq.commuity.community.mapper.UserMapper;
 import lift.ydq.commuity.community.model.Question;
 import lift.ydq.commuity.community.model.User;
 import lift.ydq.commuity.community.service.QuestionService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,11 +38,13 @@ public class PublishController {
         model.addAttribute("description",question.getDescription());
         model.addAttribute("tag",question.getTag());
         model.addAttribute("id",question.getId());
+        model.addAttribute("tags", TagCacha.get());
         return "publish";
     }
 
     @GetMapping("/publish")
-    public String publish(){
+    public String publish(Model model){
+        model.addAttribute("tags", TagCacha.get());
         return "publish";
     }
 
@@ -56,6 +60,7 @@ public class PublishController {
         model.addAttribute("title",title);
         model.addAttribute("description",description);
         model.addAttribute("tag",tag);
+        model.addAttribute("tags", TagCacha.get());
 
         if (title == null || title ==""){
             model.addAttribute("error","标题不能为空");
@@ -65,6 +70,11 @@ public class PublishController {
             return "publish";
         } if (tag == null || tag ==""){
             model.addAttribute("error","标签不能为空");
+            return "publish";
+        }
+        String invalid = TagCacha.filterInvalid(tag);
+        if(StringUtils.isNoneBlank(invalid)){
+            model.addAttribute("error","输入非法标签" + invalid);
             return "publish";
         }
         User user = (User) request.getSession().getAttribute("user");
@@ -79,6 +89,6 @@ public class PublishController {
         question.setCreator(user.getId());
         question.setId(id);
         questionService.createOrUpdate(question);
-        return "publish";
+        return "redirect:/";
     }
 }

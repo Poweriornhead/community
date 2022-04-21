@@ -4,10 +4,7 @@ import lift.ydq.commuity.community.dto.CommentDTO;
 import lift.ydq.commuity.community.enums.CommentTypeEnum;
 import lift.ydq.commuity.community.exception.CustomizeErrorCode;
 import lift.ydq.commuity.community.exception.CustomizeException;
-import lift.ydq.commuity.community.mapper.CommentMapper;
-import lift.ydq.commuity.community.mapper.QuestionExtMapper;
-import lift.ydq.commuity.community.mapper.QuestionMapper;
-import lift.ydq.commuity.community.mapper.UserMapper;
+import lift.ydq.commuity.community.mapper.*;
 import lift.ydq.commuity.community.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +36,8 @@ public class CommentService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private CommentExtMapper commentExtMapper;
     @Transactional
     public void insert(Comment comment) {
         if (comment.getParentId() == null || comment.getParentId()== 0){
@@ -55,6 +54,8 @@ public class CommentService {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
             commentMapper.insert(comment);
+            dbComment.setCommentCount(1);
+            commentExtMapper.incCommentCount(dbComment);
         }else {
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
             if(question == null){
@@ -66,11 +67,11 @@ public class CommentService {
         }
     }
 
-    public List<CommentDTO> listByQusetionId(Long id) {
+    public List<CommentDTO> listByTagetId(Long id, CommentTypeEnum type) {
         CommentExample commentExample = new CommentExample();
         commentExample.createCriteria()
                 .andParentIdEqualTo(id)
-                .andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
+                .andTypeEqualTo(type.getType());
         List<Comment> comments = commentMapper.selectByExample(commentExample);
 
         if (comments.size() == 0){
