@@ -5,6 +5,7 @@ import lift.ydq.commuity.community.dto.CommentDTO;
 import lift.ydq.commuity.community.dto.ResultDTO;
 import lift.ydq.commuity.community.enums.CommentTypeEnum;
 import lift.ydq.commuity.community.exception.CustomizeErrorCode;
+import lift.ydq.commuity.community.mapper.UserMapper;
 import lift.ydq.commuity.community.model.Comment;
 import lift.ydq.commuity.community.model.User;
 import lift.ydq.commuity.community.service.CommentService;
@@ -26,7 +27,8 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
-
+    @Autowired
+    private UserMapper userMapper;
     @ResponseBody
     @RequestMapping(value = "/comment", method = RequestMethod.POST)
     public Object post(@RequestBody CommentCreateDTO commentCreateDTO,
@@ -46,7 +48,7 @@ public class CommentController {
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setCommentator(user.getId());
         comment.setLikeCount(0L);
-        commentService.insert(comment);
+        commentService.insert(comment,user);
         return ResultDTO.okOf();
     }
 
