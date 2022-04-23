@@ -25,7 +25,7 @@ function commment2target(targetId, content, type){
             "type": type
         }),
         success: function (response){
-            if(response.code == 200 ){
+            if(response.code === 200 ){
                 // $("#comment_section").hide();
                 window.location.reload();
             }else {

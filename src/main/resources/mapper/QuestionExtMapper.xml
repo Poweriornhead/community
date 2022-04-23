@@ -31,4 +31,23 @@
         select * from QUESTION where ID != #{id} and TAG regexp #{tag}
 
     </select>
+
+    <select id="countBySearch" parameterType="lift.ydq.commuity.community.dto.QuestionQueryDTO" resultType="java.lang.Integer">
+        select count(*) from QUESTION
+        <where>
+            <if test="search != null">
+                and title regexp #{search}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBySearch" parameterType="lift.ydq.commuity.community.dto.QuestionQueryDTO" resultMap="BaseResultMap">
+        select * from QUESTION
+        <where>
+            <if test="search != null">
+               and title regexp #{search}
+            </if>
+        </where>
+            limit #{page},#{size}
+    </select>
 </mapper>
