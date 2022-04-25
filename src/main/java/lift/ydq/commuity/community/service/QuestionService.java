@@ -41,7 +41,7 @@ public class QuestionService {
 
     public PaginationDTO list(String search, Integer page, Integer size) {
         if(StringUtils.isNotBlank(search)){
-            String[] tags = StringUtils.split(search, ' ');
+            String[] tags = StringUtils.split(search , ' ');
             search = Arrays.stream(tags).collect(Collectors.joining("|"));
         }
 
@@ -172,5 +172,9 @@ public class QuestionService {
             return questionDTO;
         }).collect(Collectors.toList());
         return questionDTOS;
+    }
+
+    public void delete(Long id){
+        questionMapper.deleteByPrimaryKey(id);
     }
 }
