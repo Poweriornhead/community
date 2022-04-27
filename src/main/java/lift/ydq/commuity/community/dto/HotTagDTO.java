@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public class HotTagDTO implements Comparable{
     private String name;
     private Integer priority;
+    private Long id;
 
     @Override
     public int compareTo(@NotNull Object o) {

@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="/css/community.css">
+    <script src="/js/jquery-3.6.0.min.js"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+</head>
+<body>
+<div th:insert="~{navigation :: nav}"></div>
+<div class="container-fluid main">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                <div class="media" style="margin-top: 10px">
+                    <div th:if="${session.user == null || session.user.accountId != user.accountId}">
+                        <button  type="button" class="btn btn-success pull-right">关注</button>
+                    </div>
+                    <div class="media-left">
+                        <a href="#">
+                            <img th:src="${user.avatarUrl}" height="200" width="200"/>
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading" th:text="${user.name}"></h4>
+                    </div>
+                </div>
+            </div>
+            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin: 0">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <h3>参加的话题</h3>
+                     <span th:each="tag : ${tags}">
+                        <span class="label label-info" style="margin: 10px">
+                        <a th:href="@{/(page=1,search=${search},tag=${tag},sort=${sort})}"
+                            class="glyphicon glyphicon-tags" style="color: white"
+                            th:text="${' '+tag}">
+                            </a>
+                        </span>
+                     </span>
+            </div>
+            <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h3>贴子</h3>
+                <div class="media" th:each="question : ${paginationDTO.data}">
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            <span style="color: #c74747" th:if="${question.sticky >= 1}">[置顶] </span><a th:href="@{'/question/'+ ${question.id}}" th:text="${question.title}"></a>
+                        </h4>
+                        <span class="text-desc"><span th:text="${question.commentCount}"></span> 个回复 • <span
+                                th:text="${question.viewCount}"></span> 次浏览 • <span
+                                th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}"></span></span>
+                    </div>
+                </div>
+                <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            </div>
+
+
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <h4>关注的人</h4>
+            <h4>收藏的贴子</h4>
+            <h4>发帖数 :<em th:text="${user.questionCount}"></em></h4>
+            <h4>回复数 :<em th:text="${user.commentCount}"></em></h4>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

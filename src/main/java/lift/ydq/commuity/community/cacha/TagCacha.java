@@ -30,6 +30,10 @@ public class TagCacha {
         database.setTags(Arrays.asList("MySQL","Oracle","H2"));
         tagDTOS.add(database);
 
+        TagDTO tool = new TagDTO();
+        tool.setCategoryName("开发工具");
+        tool.setTags(Arrays.asList("git", "github", "visual-studio-code", "vim", "eclipse", "maven", "ide", "svn", "visual-studio", "atom emacs", "textmate", "hg"));
+        tagDTOS.add(tool);
 
         return tagDTOS;
     }

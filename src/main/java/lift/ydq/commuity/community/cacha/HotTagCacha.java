@@ -17,15 +17,15 @@ public class HotTagCacha {
     private Map<String, Integer> tags = new  HashMap<>();
     private List<String> hots = new ArrayList<>();
 
-    public void updateTags(Map<String, Integer> tags){
-        int max = 3;
+    public  void updateTags(Map<String, Integer> tags){
+        int max = 5;
         PriorityQueue<HotTagDTO> priorityQueue = new PriorityQueue<>(max);
 
         tags.forEach((name, priority) ->{
             HotTagDTO hotTagDTO = new HotTagDTO();
             hotTagDTO.setName(name);
             hotTagDTO.setPriority(priority);
-            if (priorityQueue.size() < 3){
+            if (priorityQueue.size() < max){
                 priorityQueue.add(hotTagDTO);
             }else {
                 HotTagDTO minHot = priorityQueue.peek();
@@ -45,6 +45,6 @@ public class HotTagCacha {
             poll = priorityQueue.poll();
         }
         hots = sortedTags;
-        //System.out.println(sortedTags);
+        System.out.println(sortedTags);
     }
 }

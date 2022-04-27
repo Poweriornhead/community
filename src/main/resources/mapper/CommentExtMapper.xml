@@ -23,4 +23,8 @@
             COMMENT_COUNT = COMMENT.COMMENT_COUNT + #{commentCount,jdbcType=INTEGER}
         where id = #{id};
     </update>
+    
+    <select id="selectCountByCOMMENTATOR"  parameterType="lift.ydq.commuity.community.model.Comment" resultType="java.lang.Integer">
+        select count(*) from COMMENT where COMMENTATOR = #{userId}
+    </select>
 </mapper>

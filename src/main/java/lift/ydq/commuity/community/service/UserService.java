@@ -1,11 +1,17 @@
 package lift.ydq.commuity.community.service;
 
-import lift.ydq.commuity.community.mapper.UserMapper;
+import lift.ydq.commuity.community.dto.GithubUser;
+import lift.ydq.commuity.community.dto.QuestionDTO;
+import lift.ydq.commuity.community.dto.UserDTO;
+import lift.ydq.commuity.community.mapper.*;
+import lift.ydq.commuity.community.model.Question;
 import lift.ydq.commuity.community.model.User;
 import lift.ydq.commuity.community.model.UserExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,6 +22,15 @@ import java.util.List;
 public class UserService {
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private UserExtMapper userExtMapper;
+
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
+
+    @Autowired
+    private CommentExtMapper commentExtMapper;
 
     public void createOrUpdate(User user) {
         UserExample userExample = new UserExample();
@@ -39,5 +54,20 @@ public class UserService {
                     .andIdEqualTo(dbUser.getId());
             userMapper.updateByExampleSelective(updateUser,example);
         }
+    }
+
+    public UserDTO selectByAccountId(String accountId) {
+        Long userId = userExtMapper.selectByAccountId(accountId);
+        User users = userMapper.selectByPrimaryKey(userId);
+        Integer questionCount = questionExtMapper.selectQuestionCount(userId);
+        Integer commentCount = commentExtMapper.selectCountByCOMMENTATOR(userId);
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(userId);
+        userDTO.setName(users.getName());
+        userDTO.setAvatarUrl(users.getAvatarUrl());
+        userDTO.setAccountId(users.getAccountId());
+        userDTO.setQuestionCount(questionCount);
+        userDTO.setCommentCount(commentCount);
+        return userDTO;
     }
 }

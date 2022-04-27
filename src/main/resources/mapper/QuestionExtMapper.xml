@@ -35,8 +35,20 @@
     <select id="countBySearch" parameterType="lift.ydq.commuity.community.dto.QuestionQueryDTO" resultType="java.lang.Integer">
         select count(*) from QUESTION
         <where>
-            <if test="search != null">
+            <if test="search != null and search != ''">
                 and title regexp #{search}
+            </if>
+            <if test="tag != null and tag != ''">
+                and tag regexp #{tag}
+            </if>
+            <if test="sort != null and sort != '' and sort == 'no'">
+                and comment_count = 0
+            </if>
+            <if test="time != null and time != ''">
+                and gmt_create > #{time}
+            </if>
+            <if test="1 == 1">
+                and sticky = 0
             </if>
         </where>
     </select>
@@ -44,10 +56,43 @@
     <select id="selectBySearch" parameterType="lift.ydq.commuity.community.dto.QuestionQueryDTO" resultMap="BaseResultMap">
         select * from QUESTION
         <where>
-            <if test="search != null">
-               and title regexp #{search}
+            <if test="search != null and search != ''">
+                and title regexp #{search}
+            </if>
+            <if test="tag != null and tag != ''">
+                and tag regexp #{tag}
+            </if>
+            <if test="sort != null and sort != '' and sort == 'no'">
+                and comment_count = 0
+            </if>
+            <if test="time != null and time != ''">
+                and gmt_create > #{time}
+            </if>
+            <if test="1 == 1">
+                and sticky = 0
             </if>
         </where>
-            limit #{page},#{size}
+        <if test="sort == null or sort == ''">
+            order by gmt_create desc
+        </if>
+        <if test="sort != null and sort != '' and sort == 'new'">
+            order by gmt_create desc
+        </if>
+        <if test="sort != null and sort != '' and sort == 'no'">
+            order by gmt_create desc
+        </if>
+        <if test="sort != null and sort != '' and (sort == 'hot' || sort == 'hot7' || sort == 'hot30')">
+            order by comment_count desc
+        </if>
+        limit #{page},#{size}
+    </select>
+
+    <select id="selectSticky" parameterType="lift.ydq.commuity.community.dto.QuestionQueryDTO"
+            resultMap="BaseResultMap">
+        select * from question where sticky > 0 order by sticky desc, gmt_create desc
+    </select>
+
+    <select id="selectQuestionCount" parameterType="lift.ydq.commuity.community.model.Question" resultType="java.lang.Integer">
+        select count(*) from QUESTION where CREATOR = #{userid}
     </select>
 </mapper>

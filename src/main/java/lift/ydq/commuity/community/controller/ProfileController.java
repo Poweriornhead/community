@@ -32,7 +32,7 @@ public class ProfileController {
     private NotificationService notificationService;
 
     @GetMapping("/profile/{action}")
-    public String profile(HttpServletRequest request,
+    public String profiles(HttpServletRequest request,
                           @PathVariable(name = "action") String action,
                           Model model,
                           @RequestParam(name = "page", defaultValue = "1") Integer page,
