@@ -62,12 +62,20 @@ public class UserService {
         User users = userMapper.selectByPrimaryKey(userId);
         Integer questionCount = questionExtMapper.selectQuestionCount(userId);
         Integer commentCount = commentExtMapper.selectCountByCOMMENTATOR(userId);
+
         FollowExample followExample = new FollowExample();
         followExample.createCriteria()
                 .andRequesterEqualTo(userId)
                 .andTypeEqualTo(1);
-        List<Follow> follows = followMapper.selectByExample(followExample);
-        Integer followerCount = follows.size();
+        List<Follow> followsUser = followMapper.selectByExample(followExample);
+        Integer followerCount = followsUser.size();
+
+        FollowExample followExample2 = new FollowExample();
+        followExample.createCriteria()
+                .andRequesterEqualTo(userId)
+                .andTypeEqualTo(2);
+        Integer followQueCount = Math.toIntExact(followMapper.countByExample(followExample));
+
         UserDTO userDTO = new UserDTO();
         userDTO.setId(userId);
         userDTO.setName(users.getName());
@@ -76,6 +84,7 @@ public class UserService {
         userDTO.setQuestionCount(questionCount);
         userDTO.setCommentCount(commentCount);
         userDTO.setFollowerCount(followerCount);
+        userDTO.setFollowQueCount(followQueCount);
         return userDTO;
     }
 

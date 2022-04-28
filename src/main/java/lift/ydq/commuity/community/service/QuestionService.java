@@ -7,14 +7,8 @@ import lift.ydq.commuity.community.dto.QuestionQueryDTO;
 import lift.ydq.commuity.community.enums.SortEnum;
 import lift.ydq.commuity.community.exception.CustomizeErrorCode;
 import lift.ydq.commuity.community.exception.CustomizeException;
-import lift.ydq.commuity.community.mapper.QuestionExtMapper;
-import lift.ydq.commuity.community.mapper.QuestionMapper;
-import lift.ydq.commuity.community.mapper.UserExtMapper;
-import lift.ydq.commuity.community.mapper.UserMapper;
-import lift.ydq.commuity.community.model.Question;
-import lift.ydq.commuity.community.model.QuestionExample;
-import lift.ydq.commuity.community.model.User;
-import lift.ydq.commuity.community.model.UserExample;
+import lift.ydq.commuity.community.mapper.*;
+import lift.ydq.commuity.community.model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.jetbrains.annotations.NotNull;
@@ -49,6 +43,9 @@ public class QuestionService {
 
     @Autowired
     private UserExtMapper userExtMapper;
+
+    @Autowired
+    private FollowMapper followMapper;
 
 
     public PaginationDTO list(String search, String tag, String sort, Integer page, Integer size) {
@@ -263,4 +260,68 @@ public class QuestionService {
         return paginationDTO;
     }
 
+    public PaginationDTO folowList(Long userId, Integer page, Integer size) {
+        PaginationDTO paginationDTO = new PaginationDTO();
+        FollowExample followExample = new FollowExample();
+        followExample.createCriteria()
+                .andRequesterEqualTo(userId)
+                .andTypeEqualTo(2);
+        List<Follow>followList = followMapper.selectByExample(followExample);
+        List<Question> questionList = new ArrayList<>();
+        Integer totalCount = (int)followMapper.countByExample(followExample);
+        paginationDTO.setPagination(totalCount, page, size);
+        if(page < 1){
+            page = 1;
+        }
+        if (page > paginationDTO.getTotalPage()){
+            page = paginationDTO.getTotalPage();
+        }
+        //5*(i-1)
+        Integer offset = size*(page-1);
+        for (Follow follow : followList) {
+            QuestionExample questionExample = new QuestionExample();
+            questionExample.createCriteria()
+                    .andIdEqualTo(follow.getFollowers());
+            List<Question> questions = questionMapper.selectByExample(questionExample);
+            for (Question question : questions) {
+                questionList.add(question);
+            }
+        }
+        return getPaginationDTO(paginationDTO, questionList);
+
+    }
+
+    public PaginationDTO userList(Long userId, Integer page, Integer size) {
+        PaginationDTO paginationDTO = new PaginationDTO();
+        FollowExample followExample = new FollowExample();
+        followExample.createCriteria()
+                .andRequesterEqualTo(userId)
+                .andTypeEqualTo(1);
+        List<Follow>followList = followMapper.selectByExample(followExample);
+        List<User> userList = new ArrayList<>();
+        Integer totalCount = (int)followMapper.countByExample(followExample);
+        paginationDTO.setPagination(totalCount, page, size);
+        if(page < 1){
+            page = 1;
+        }
+        if (page > paginationDTO.getTotalPage()){
+            page = paginationDTO.getTotalPage();
+        }
+        //5*(i-1)
+        Integer offset = size*(page-1);
+        for (Follow follow : followList) {
+            UserExample userExample = new UserExample();
+            userExample.createCriteria()
+                    .andIdEqualTo(follow.getFollowers());
+            List<User> users = userMapper.selectByExample(userExample);
+            for (User user : users) {
+                userList.add(user);
+            }
+
+        }
+        paginationDTO.setData(userList);
+        return paginationDTO;
+
+    }
 }
+

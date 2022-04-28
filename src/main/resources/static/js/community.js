@@ -134,9 +134,15 @@ function isDelete(e){
   })
 }
 function followUser(e) {
-    debugger
+    // debugger
     var followers = e.getAttribute("data-followers");
     follow(followers,  1)
+}
+
+function followQuestion(e) {
+    // debugger
+    var followers = e.getAttribute("data-followers");
+    follow(followers,  2)
 }
 function follow(followers, type){
         $.ajax({

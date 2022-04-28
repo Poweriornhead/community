@@ -58,6 +58,39 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section == 'followQuestion'}">
+                <div class="media" th:each="question : ${pagination.getData}">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object img-rounded" th:src="${question.user.avatarUrl}">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            <a th:href="@{'/question/'+ ${question.id}}" th:text="${question.title}"></a>
+                        </h4>
+                        <span class="font-desc"><span th:text="${question.commentCount}"></span>个回复 •<span
+                                th:text="${question.viewCount}"></span>次阅览 • <span
+                                th:text="${#dates.format(question.gmtCreate, 'yyyy-MM-dd HH:mm')}"></span>
+                         <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top: 5px ">
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:if="${section == 'followUser'}">
+                <div class="media" th:each="user : ${pagination.getData}">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object img-rounded" th:src="${user.avatarUrl}">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            <a th:href="@{'/userspace/'+ ${user.accountId}}" th:text="${user.name}"></a>
+                        </h4>
+                    </div>
+                </div>
+            </div>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <nav aria-label="Page navigation 分页">
                     <ul class="pagination">
@@ -97,6 +130,12 @@
                 <a href="/profile/replies"  th:class="${section == 'replies'}? 'active list-group-item':'list-group-item' ">
                     最新回复
                     <span class="badge" th:text="${unreadCount}"></span>
+                </a>
+                <a href="/profile/followQuestion"  th:class="${section == 'followQuestion'}? 'active list-group-item':'list-group-item' ">
+                    我的收藏
+                </a>
+                <a href="/profile/followUser"  th:class="${section == 'followUser'}? 'active list-group-item':'list-group-item' ">
+                    我的关注
                 </a>
             </div>
         </div>

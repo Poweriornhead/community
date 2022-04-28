@@ -4,13 +4,16 @@ import lift.ydq.commuity.community.dto.CommentDTO;
 import lift.ydq.commuity.community.dto.QuestionDTO;
 import lift.ydq.commuity.community.enums.CommentTypeEnum;
 import lift.ydq.commuity.community.model.Follow;
+import lift.ydq.commuity.community.model.User;
 import lift.ydq.commuity.community.service.CommentService;
 import lift.ydq.commuity.community.service.QuestionService;
+import lift.ydq.commuity.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -24,6 +27,9 @@ public class QuestionController {
 
     @Autowired
     CommentService commentService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/question/{id}")
     public String question(@PathVariable(name = "id") Long id,

@@ -15,4 +15,5 @@ public class UserDTO {
     private Integer questionCount;
     private Integer commentCount;
     private Integer followerCount;
+    private Integer followQueCount;
 }

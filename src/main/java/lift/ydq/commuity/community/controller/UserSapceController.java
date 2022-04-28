@@ -47,8 +47,13 @@ public class UserSapceController {
     @ResponseBody
     @RequestMapping(value = "/userspace/follow", method = RequestMethod.GET)
     public String follow(Long followers, Integer type,
-                         HttpServletRequest request){
+                         HttpServletRequest request,
+                         Model model){
         User user = (User) request.getSession().getAttribute("user");
+        if (user == null){
+            model.addAttribute("error","请先登录");
+            return "userspace";
+        }
 
         Follow follow = new Follow();
         follow.setFollowers(followers);

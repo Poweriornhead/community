@@ -55,7 +55,27 @@ public class ProfileController {
             model.addAttribute("unreadCount", unreadCount);
             model.addAttribute("sectionName","最新回复");
         }
+
+
+        if ("followQuestion".equals(action)){
+            PaginationDTO paginationDTO = questionService.folowList(user.getId(),page,size);
+            Long unreadCount = notificationService.unreadCount(user.getId());
+            model.addAttribute("section", "followQuestion");
+            model.addAttribute("pagination",paginationDTO);
+            model.addAttribute("unreadCount", unreadCount);
+            model.addAttribute("sectionName","我的收藏");
+        }
+        if ("followUser".equals(action)){
+            PaginationDTO paginationDTO = questionService.userList(user.getId(),page,size);
+            Long unreadCount = notificationService.unreadCount(user.getId());
+            model.addAttribute("section", "followUser");
+            model.addAttribute("pagination",paginationDTO);
+            model.addAttribute("unreadCount", unreadCount);
+            model.addAttribute("sectionName","我的收藏");
+        }
+
         return "profile";
+
     }
 
     @ResponseBody
