@@ -1,6 +1,7 @@
 package lift.ydq.commuity.community.controller;
 
 import lift.ydq.commuity.community.dto.PaginationDTO;
+import lift.ydq.commuity.community.dto.QuestionDTO;
 import lift.ydq.commuity.community.interceptor.SessionInterceptor;
 import lift.ydq.commuity.community.mapper.UserMapper;
 import lift.ydq.commuity.community.model.Question;
@@ -10,10 +11,8 @@ import lift.ydq.commuity.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.yaml.snakeyaml.events.Event;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -59,9 +58,11 @@ public class ProfileController {
         return "profile";
     }
 
-    @RequestMapping("/profile/delete")
-    public String delete(@RequestParam(name = "id") Long id){
-        questionService.delete(id);
+    @ResponseBody
+    @RequestMapping(value = "/profile/delete" ,method = RequestMethod.GET)
+    public Object delete(Long Id){
+        System.out.println(Id);
+        questionService.delete(Id);
         return "profile";
     }
 

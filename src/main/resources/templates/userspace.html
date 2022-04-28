@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="/css/community.css">
     <script src="/js/jquery-3.6.0.min.js"></script>
     <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="/js/community.js" type="application/javascript"></script>
 </head>
 <body>
 <div th:insert="~{navigation :: nav}"></div>
@@ -16,7 +17,9 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
                 <div class="media" style="margin-top: 10px">
                     <div th:if="${session.user == null || session.user.accountId != user.accountId}">
-                        <button  type="button" class="btn btn-success pull-right">关注</button>
+                        <button  type="button" class="btn btn-success pull-right" id="followBtn"
+                                 onclick="followUser(this)"
+                                 th:data-followers="${user.id}">关注</button>
                     </div>
                     <div class="media-left">
                         <a href="#">
@@ -59,7 +62,7 @@
 
         </div>
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-            <h4>关注的人</h4>
+            <h4>关注的人 :<em th:text="${user.followerCount}"></em> 人</h4>
             <h4>收藏的贴子</h4>
             <h4>发帖数 :<em th:text="${user.questionCount}"></em></h4>
             <h4>回复数 :<em th:text="${user.commentCount}"></em></h4>

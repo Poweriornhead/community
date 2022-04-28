@@ -4,9 +4,7 @@ import lift.ydq.commuity.community.dto.GithubUser;
 import lift.ydq.commuity.community.dto.QuestionDTO;
 import lift.ydq.commuity.community.dto.UserDTO;
 import lift.ydq.commuity.community.mapper.*;
-import lift.ydq.commuity.community.model.Question;
-import lift.ydq.commuity.community.model.User;
-import lift.ydq.commuity.community.model.UserExample;
+import lift.ydq.commuity.community.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,6 +29,9 @@ public class UserService {
 
     @Autowired
     private CommentExtMapper commentExtMapper;
+
+    @Autowired
+    private FollowMapper followMapper;
 
     public void createOrUpdate(User user) {
         UserExample userExample = new UserExample();
@@ -61,6 +62,12 @@ public class UserService {
         User users = userMapper.selectByPrimaryKey(userId);
         Integer questionCount = questionExtMapper.selectQuestionCount(userId);
         Integer commentCount = commentExtMapper.selectCountByCOMMENTATOR(userId);
+        FollowExample followExample = new FollowExample();
+        followExample.createCriteria()
+                .andRequesterEqualTo(userId)
+                .andTypeEqualTo(1);
+        List<Follow> follows = followMapper.selectByExample(followExample);
+        Integer followerCount = follows.size();
         UserDTO userDTO = new UserDTO();
         userDTO.setId(userId);
         userDTO.setName(users.getName());
@@ -68,6 +75,22 @@ public class UserService {
         userDTO.setAccountId(users.getAccountId());
         userDTO.setQuestionCount(questionCount);
         userDTO.setCommentCount(commentCount);
+        userDTO.setFollowerCount(followerCount);
         return userDTO;
+    }
+
+    public void createFollow(Follow follow) {
+        FollowExample followExample = new FollowExample();
+        followExample.createCriteria()
+                .andFollowersEqualTo(follow.getFollowers())
+                .andRequesterEqualTo(follow.getRequester())
+                .andTypeEqualTo(follow.getType());
+        List<Follow> follows = followMapper.selectByExample(followExample);
+        if (follows.size() == 0){
+            followMapper.insert(follow);
+        }else {
+            followMapper.deleteByExample(followExample);
+        }
+
     }
 }

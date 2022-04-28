@@ -118,3 +118,38 @@ function selectTag(e){
         }
     }
 }
+
+function isDelete(e){
+    var id = e.getAttribute("data-id")
+    $.ajax({
+        type:"GET",
+        url:"/profile/delete",
+        contentType:'application/json',
+        data:{
+            "Id":id
+        },
+        success:function (){
+            window.location.reload();
+        }
+  })
+}
+function followUser(e) {
+    debugger
+    var followers = e.getAttribute("data-followers");
+    follow(followers,  1)
+}
+function follow(followers, type){
+        $.ajax({
+            type:"GET",
+            url:"/userspace/follow",
+            contentType:'application/json',
+            dataType: "json",
+            data:{
+                "followers": followers,
+                "type": type
+            },
+            success:function (){
+                window.location.reload();
+            }
+        })
+}

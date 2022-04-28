@@ -2,14 +2,17 @@ package lift.ydq.commuity.community.controller;
 
 import lift.ydq.commuity.community.dto.PaginationDTO;
 import lift.ydq.commuity.community.dto.UserDTO;
+import lift.ydq.commuity.community.mapper.FollowMapper;
+import lift.ydq.commuity.community.model.Follow;
+import lift.ydq.commuity.community.model.User;
 import lift.ydq.commuity.community.service.QuestionService;
 import lift.ydq.commuity.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -24,8 +27,12 @@ public class UserSapceController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private FollowMapper followMapper;
+
     @GetMapping("/userspace/{accountId}")
-    public String userspace(Model model,
+    public Object userspace(Model model,
+                            HttpServletRequest request,
                             @PathVariable(name = "accountId") String accountId){
         UserDTO userDTO = userService.selectByAccountId(accountId);
         List<String> userTags = questionService.listTag(userDTO.getId());
@@ -34,6 +41,21 @@ public class UserSapceController {
         //model.addAttribute("accountId",accountId);
         model.addAttribute("tags",userTags);
         model.addAttribute("user",userDTO);
+        return "userspace";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/userspace/follow", method = RequestMethod.GET)
+    public String follow(Long followers, Integer type,
+                         HttpServletRequest request){
+        User user = (User) request.getSession().getAttribute("user");
+
+        Follow follow = new Follow();
+        follow.setFollowers(followers);
+        follow.setRequester(user.getId());
+        follow.setType(type);
+        follow.setGmtCreate(System.currentTimeMillis());
+        userService.createFollow(follow);
         return "userspace";
     }
 }

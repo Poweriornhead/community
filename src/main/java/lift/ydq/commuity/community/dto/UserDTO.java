@@ -14,4 +14,5 @@ public class UserDTO {
     private String name;
     private Integer questionCount;
     private Integer commentCount;
+    private Integer followerCount;
 }
